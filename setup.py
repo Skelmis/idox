@@ -28,7 +28,7 @@ setup(
     version=version,
     author="Skelmis",
     author_email="skelmis.craft@gmail.com",
-    description="A simplistic yet powerful asynchronous MongoDB query engine.",
+    description="IDOR file downloader using HTTP request files.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     project_urls={
@@ -36,13 +36,12 @@ setup(
         "Documentation": "https://idox.rtfd.io/",
         "Homepage": "https://github.com/Skelmis/idox",
     },
-    packages=find_packages(include=("alaric", "alaric.*")),
+    packages=find_packages(include=("idox", "idox.*")),
     install_requires=parse_requirements_file("requirements.txt"),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires=">=3.8",
-    extra_requires={"cached": ["redis[hiredis]"]},
+    python_requires=">=3.10",
 )
