@@ -9,7 +9,7 @@ def test_get_request(get_request):
     request: Request = idox.split_request(get_request)
 
     assert request.url == "blurp.skelmis.co.nz/"
-    assert request.type == "GET"
+    assert request.method == "GET"
     assert request.body == ""
     assert request.headers == {
         "X-TEST": "Hello World",
@@ -32,7 +32,7 @@ def test_post_form_request(post_form_request):
     request: Request = idox.split_request(post_form_request)
 
     assert request.url == "blurp.skelmis.co.nz/test"
-    assert request.type == "POST"
+    assert request.method == "POST"
     assert request.body == "field1=value1&field2=value2"
     assert request.headers == {
         "Host": "blurp.skelmis.co.nz",
@@ -48,7 +48,7 @@ def test_post_json_request(post_json_request):
     request: Request = idox.split_request(post_json_request)
 
     assert request.url == "blurp.skelmis.co.nz/json"
-    assert request.type == "POST"
+    assert request.method == "POST"
     assert request.body == {"id": False}
     assert request.headers == {
         "Host": "blurp.skelmis.co.nz",
