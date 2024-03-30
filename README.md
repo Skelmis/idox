@@ -2,7 +2,7 @@
 
 **A CLI or embedded tool for easily downloading IDOR'd files from a burp request.**
 
-<img src="images/idox.jpeg" alt="drawing" width="250"/>
+<img src="https://github.com/Skelmis/idox/blob/master/images/idox.jpeg" alt="drawing" width="250"/>
 
 ---
 
@@ -33,7 +33,7 @@ python -m idox --request-file-path request.txt 100
 
 This would create an `output` directory which stores all the responses from your target site by response content type.
 
-For further usage, see `python -m idox --help`
+For further usage, see `python -m idox --help` or the `data` directory.
 
 ---
 
