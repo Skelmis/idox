@@ -1,4 +1,5 @@
 import asyncio
+import itertools
 import re
 from enum import Enum
 from pathlib import Path
@@ -23,19 +24,21 @@ class InjectionPoint(Enum):
 class Idox:
     def __init__(
         self,
+        sequencer: SequenceT,
         *,
         max_concurrency: int = 25,
         output_directory: Path = Path("./output"),
         incoming_request: str | None = None,
         request_file_path: Path | None = None,
         injection_point: str = "$INJECT$",
-        sequencer: SequenceT = NumericSequence(),
+        protocol: str = "https",
     ):
         self.output_directory: Path = output_directory
         self.max_concurrent: int = max_concurrency
         self.semaphore = asyncio.Semaphore(max_concurrency)
-        self._iter_num = NumericSequence()
+        self._iter_num = itertools.count()
         self.sequencer: SequenceT = sequencer
+        self.protocol: str = protocol
 
         if incoming_request is None and request_file_path is None:
             raise ValueError(
@@ -59,6 +62,8 @@ class Idox:
             self._injection_point: InjectionPoint = InjectionPoint.COOKIES
         elif injection_point in str(self.request.body):
             self._injection_point: InjectionPoint = InjectionPoint.BODY
+        else:
+            raise ValueError(f"Failed to find {self._injection_string} in the request")
 
     def split_request(self, request: str) -> Request:
         """Given a valid HTTP request, return the headers
@@ -112,8 +117,9 @@ class Idox:
 
     def extension_from_response(self, response: httpx.Response):
         content = response.text
-        content_type = response.headers.get("Content-Type")
-        if "<!DOCTYPE html>" in content:
+        content_type = response.headers.get("Content-Type", "")
+        # TODO Add more extensions
+        if "<!DOCTYPE html>" in content or "</html>" in content:
             extension = "html"
 
         elif content.startswith("<?xml"):
@@ -135,10 +141,16 @@ class Idox:
         elif "application/pdf" in content_type:
             extension = "pdf"
 
+        elif "application/json" in content_type:
+            extension = "json"
+
         else:
             # Let's look at the content disposition now
             # we are passed the shit I threw at the site
             content_disp = response.headers.get("Content-Disposition")
+            if content_disp is None:
+                return "txt"
+
             try:
                 extension_find = disp_pattern.search(content_disp)
                 extension = extension_find.group(1).lstrip(".")
@@ -153,22 +165,35 @@ class Idox:
         if self._injection_point is InjectionPoint.URL:
             url = self.request.url.replace(self._injection_string, current_iter)
 
+        # Guesstimate this is correct
+        url = self.protocol + "://" + url
+
         try:
             async with self.semaphore:
                 if self.request.body:
                     if isinstance(self.request.body, dict):
+                        body = self.request.body
+                        if self._injection_point is InjectionPoint.BODY:
+                            body = orjson.dumps(body)
+                            body = body.replace(self._injection_string, current_iter)
+                            body = orjson.loads(body)
+
                         resp = await ac.request(
                             self.request.method,
                             url=url,
                             cookies=self.request.cookies,
-                            json=self.request.body,
+                            json=body,
                         )
                     else:
+                        body = self.request.body
+                        if self._injection_point is InjectionPoint.BODY:
+                            body = body.replace(self._injection_string, current_iter)
+
                         resp = await ac.request(
                             self.request.method,
                             url=url,
                             cookies=self.request.cookies,
-                            content=self.request.body,
+                            content=body,
                         )
                 else:
                     resp = await ac.request(
@@ -178,6 +203,7 @@ class Idox:
                     )
         except Exception as e:
             print(exception_as_string(e))
+            return
 
         if resp.status_code >= 300:
             print(f"Request returned non-200 code. {resp.text}")
