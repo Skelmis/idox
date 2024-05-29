@@ -20,6 +20,13 @@ class ProtocolChoices(str, Enum):
 class TypeChoices(str, Enum):
     get = "GET"
     post = "POST"
+    head = "HEAD"
+    options = "OPTIONS"
+    put = "PUT"
+    delete = "DELETE"
+    trace = "TRACE"
+    patch = "PATCH"
+    connect = "CONNECT"
 
 
 app = typer.Typer()
