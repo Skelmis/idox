@@ -67,10 +67,10 @@ def file(
 
 @app.command()
 def url(
-    ending_number: Annotated[
-        int, typer.Option(help="The number of requests to send up to")
-    ],
     url: Annotated[str, typer.Argument(help="The url to make requests to")],
+    ending_number: Annotated[
+        int, typer.Argument(help="The number of requests to send up to")
+    ],
     starting_number: Annotated[
         int, typer.Option(help="The base number to start at")
     ] = 0,

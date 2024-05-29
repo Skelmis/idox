@@ -40,7 +40,7 @@ This would create an `output` directory which stores all the responses from your
 Given it requires no auth, you can also enumerate all items with the following simpler syntax:
 
 ```shell
-python -m idox url "https://domain.com/images/$INJECT$/download" --ending-number 100
+python -m idox url "https://domain.com/images/$INJECT$/download"  100
 ```
 
 This would create an `output` directory which stores all the responses from your target site by response content type.
