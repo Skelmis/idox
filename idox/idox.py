@@ -8,7 +8,7 @@ import httpx
 import orjson
 from commons import exception_as_string
 
-from idox import MalformedRequest, Request, SequenceT, NumericSequence
+from idox import MalformedRequest, Request, SequenceT
 
 disp_pattern = re.compile(r".*filename=\"[a-zA-Z0-9`; -_=\[\]]*\.(.*)\"")
 
@@ -28,8 +28,9 @@ class Idox:
         *,
         max_concurrency: int = 25,
         output_directory: Path = Path("./output"),
-        incoming_request: str | None = None,
         request_file_path: Path | None = None,
+        request_url: str | None = None,
+        request_method: str = "GET",
         injection_point: str = "$INJECT$",
         protocol: str = "https",
     ):
@@ -40,17 +41,26 @@ class Idox:
         self.sequencer: SequenceT = sequencer
         self.protocol: str = protocol
 
-        if incoming_request is None and request_file_path is None:
+        if request_url is None and request_file_path is None:
             raise ValueError(
                 "I require at-least one of incoming_request or"
                 " request_file_path to work"
             )
 
-        if incoming_request is None:
+        if request_url is None:
             with open(request_file_path, "r") as f:
                 incoming_request = f.read()
 
-        self.request: Request = self.split_request(incoming_request)
+            self.request: Request = self.split_request(incoming_request)
+
+        else:
+            self.request: Request = Request(
+                url=request_url,
+                method=request_method,
+                body="",
+                cookies=[],
+                headers={},
+            )
 
         # Find the injection point
         self._injection_string: str = injection_point
@@ -166,7 +176,8 @@ class Idox:
             url = self.request.url.replace(self._injection_string, current_iter)
 
         # Guesstimate this is correct
-        url = self.protocol + "://" + url
+        if not url.startswith("http"):
+            url = self.protocol + "://" + url
 
         try:
             async with self.semaphore:
