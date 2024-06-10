@@ -223,15 +223,19 @@ class Idox:
         ext = self.extension_from_response(resp)
         ext_path = self.output_directory / ext
         all_path = self.output_directory / "all"
+        code_path = self.output_directory / "status_code" / str(resp.status_code)
         ext_path.mkdir(parents=True, exist_ok=True)
         all_path.mkdir(parents=True, exist_ok=True)
+        code_path.mkdir(parents=True, exist_ok=True)
         byte_content = resp.content
         iter_num = next(self._iter_num)
-        with open(ext_path / f"{iter_num}.{ext}", "wb") as f:
+        output_name = f"{iter_num}.{ext}"
+        base_all_path = (all_path / output_name).absolute()
+        with open(base_all_path, "wb") as f:
             f.write(byte_content)
 
-        with open(all_path / f"{iter_num}.{ext}", "wb") as f:
-            f.write(byte_content)
+        (ext_path / output_name).absolute().hardlink_to(base_all_path)
+        (code_path / output_name).absolute().hardlink_to(base_all_path)
 
     async def run(self):
         limits = httpx.Limits(
