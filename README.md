@@ -60,13 +60,11 @@ python -m idox url "https://blurp.skelmis.co.nz/{INJECT}" --sequence-file exampl
 
 ### Example output
 
-This would create an `output` directory which stores all the responses from your target site by response content type.
+All of these would create an `output` directory which stores all the responses from your target site by response content type.
 
 The following image contains an example output structure:
 
 <img src="https://github.com/Skelmis/idox/blob/master/images/output.png" alt="drawing" width="500"/>
-
-
 
 
 For further usage, see `python -m idox --help` or the `data` directory.
