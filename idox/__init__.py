@@ -1,4 +1,4 @@
-__version__ = "0.1.1"
+__version__ = "1.0.0"
 
 import logging
 from collections import namedtuple
@@ -9,7 +9,7 @@ from idox.exceptions import BaseIdoxException, MalformedRequest
 from idox.idox import Idox
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro releaselevel serial")
-version_info = VersionInfo(major=0, minor=1, micro=1, releaselevel="beta", serial=0)
+version_info = VersionInfo(major=1, minor=0, micro=0, releaselevel="beta", serial=0)
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 __all__ = (
