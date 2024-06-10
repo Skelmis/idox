@@ -6,6 +6,13 @@
 
 ---
 
+This tool will enumerate the provided URL and download all responses under the correct file extension for later analysis.
+
+Example statistics:
+<img src="https://github.com/Skelmis/idox/blob/master/images/usage.jpeg" alt="drawing" width="750"/>
+
+*File extension incorrect or missing? Open an issue with an example response and expected behaviour*
+
 ### Example usage
 
 #### Burp files
