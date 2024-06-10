@@ -19,7 +19,7 @@ Example statistics:
 #### Install
 
 ```shell
-pip install idox
+python -m pip install idox
 ```
 
 #### Burp files
