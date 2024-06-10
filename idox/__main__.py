@@ -1,5 +1,6 @@
 import asyncio
 import io
+import sys
 from enum import Enum
 from pathlib import Path
 from typing import Annotated
@@ -8,7 +9,7 @@ import click
 from click import style as s
 import typer
 
-from idox import Idox, NumericSequence
+from idox import Idox, NumericSequence, FileSequence, SequenceT
 
 
 class SequenceTypes(str, Enum):
@@ -32,14 +33,14 @@ class TypeChoices(str, Enum):
     connect = "CONNECT"
 
 
-app = typer.Typer()
+app = typer.Typer(pretty_exceptions_show_locals=False, no_args_is_help=True)
 
 
 @app.command()
 def file(
     ending_number: Annotated[
         int, typer.Argument(help="The number of requests to send up to")
-    ],
+    ] = None,
     request_file_path: Annotated[
         Path, typer.Option(help="The path to the burp file")
     ] = None,
@@ -58,14 +59,19 @@ def file(
     injection_point: Annotated[
         str, typer.Option(help="The injection point to put numbers in")
     ] = "{INJECT}",
+    sequence_file: Annotated[
+        Path,
+        typer.Option(
+            help="The path to a file containing the ID's to use instead of auto incrementing id's"
+        ),
+    ] = None,
     protocol: ProtocolChoices = "https",
 ):
+    sequence = get_sequencer(
+        ending_number, numeric_step, sequence_file, starting_number
+    )
     idox: Idox = Idox(
-        NumericSequence(
-            ending_number=ending_number,
-            starting_number=starting_number,
-            jump=numeric_step,
-        ),
+        sequence,
         request_file_path=request_file_path,
         protocol=protocol,
         output_directory=output_directory,
@@ -80,7 +86,7 @@ def url(
     url: Annotated[str, typer.Argument(help="The url to make requests to")],
     ending_number: Annotated[
         int, typer.Argument(help="The number of requests to send up to")
-    ],
+    ] = None,
     starting_number: Annotated[
         int, typer.Option(help="The base number to start at")
     ] = 0,
@@ -96,15 +102,21 @@ def url(
     injection_point: Annotated[
         str, typer.Option(help="The injection point to put numbers in")
     ] = "{INJECT}",
+    sequence_file: Annotated[
+        Path,
+        typer.Option(
+            help="The path to a file containing the ID's to use instead of auto incrementing id's"
+        ),
+    ] = None,
     request_type: TypeChoices = "GET",
     protocol: ProtocolChoices = "https",
 ):
+    sequence = get_sequencer(
+        ending_number, numeric_step, sequence_file, starting_number
+    )
+
     idox: Idox = Idox(
-        NumericSequence(
-            ending_number=ending_number,
-            starting_number=starting_number,
-            jump=numeric_step,
-        ),
+        sequence,
         request_url=url,
         protocol=protocol,
         output_directory=output_directory,
@@ -113,6 +125,42 @@ def url(
         request_method=request_type.value,
     )
     main(idox)
+
+
+def get_sequencer(
+    ending_number: int | None,
+    numeric_step: int,
+    sequence_file: Path | None,
+    starting_number: int,
+) -> SequenceT:
+    if ending_number is not None and sequence_file is not None:
+        ctx = click.get_current_context()
+        ctx.fail(
+            "The parameters ending_number and --sequence-file cannot be used together. "
+            "Please remove one and try again."
+        )
+
+    if ending_number is not None:
+        sequence = NumericSequence(
+            ending_number=ending_number,
+            starting_number=starting_number,
+            jump=numeric_step,
+        )
+
+    elif sequence_file is not None:
+        if not sequence_file.exists():
+            ctx = click.get_current_context()
+            ctx.fail(
+                "The file provided in --sequence-file does not exist. Please try again."
+            )
+
+        sequence = FileSequence(sequence_file)
+
+    else:
+        ctx = click.get_current_context()
+        ctx.fail("Please provide either an ending_number or --sequence-file parameter.")
+
+    return sequence  # noqa
 
 
 def main(idox: Idox):

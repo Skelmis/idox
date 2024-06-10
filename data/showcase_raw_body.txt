@@ -1,4 +1,4 @@
 GET /idor/body HTTP/1.1
 Host: blurp.skelmis.co.nz
 
-$INJECT$
+{INJECT}

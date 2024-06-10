@@ -1,3 +1,5 @@
+from unittest.mock import Mock
+
 import pytest
 
 from idox import MalformedRequest, Request, Idox
@@ -5,7 +7,7 @@ from idox import MalformedRequest, Request, Idox
 
 # noinspection DuplicatedCode
 def test_get_request(get_request):
-    idox: Idox = Idox()
+    idox: Idox = Idox(Mock(), request_url="https://example.com/{INJECT}")
     request: Request = idox.split_request(get_request)
 
     assert request.url == "blurp.skelmis.co.nz/"
@@ -22,13 +24,13 @@ def test_get_request(get_request):
 # noinspection DuplicatedCode
 def test_malformed_request(malformed_request):
     with pytest.raises(MalformedRequest):
-        idox: Idox = Idox()
+        idox: Idox = Idox(Mock(), request_url="https://example.com/{INJECT}")
         idox.split_request(malformed_request)
 
 
 # noinspection DuplicatedCode
 def test_post_form_request(post_form_request):
-    idox: Idox = Idox()
+    idox: Idox = Idox(Mock(), request_url="https://example.com/{INJECT}")
     request: Request = idox.split_request(post_form_request)
 
     assert request.url == "blurp.skelmis.co.nz/test"
@@ -44,7 +46,7 @@ def test_post_form_request(post_form_request):
 
 # noinspection DuplicatedCode
 def test_post_json_request(post_json_request):
-    idox: Idox = Idox()
+    idox: Idox = Idox(Mock(), request_url="https://example.com/{INJECT}")
     request: Request = idox.split_request(post_json_request)
 
     assert request.url == "blurp.skelmis.co.nz/json"
