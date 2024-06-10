@@ -1,8 +1,11 @@
 import asyncio
+import io
 from enum import Enum
 from pathlib import Path
 from typing import Annotated
 
+import click
+from click import style as s
 import typer
 
 from idox import Idox, NumericSequence
@@ -114,9 +117,36 @@ def url(
 
 def main(idox: Idox):
     async def async_main():
-        print("Starting Idox\r", end="")
+        click.secho("Starting Idox\r", nl=False)
         await idox.run()
-        print("Finished running")
+        click.secho("Enumeration of target has finished\n\n", nl=False)
+
+        output_stats = io.StringIO()
+        output_stats.write(s("Statistics by response status code:\n"))
+        for k, v in sorted(idox.seen_codes.items()):
+            if k < 200:
+                # 100's
+                fg = "white"
+            elif k < 300:
+                # 200's
+                fg = "green"
+            elif k < 400:
+                # 300's
+                fg = "blue"
+            elif k < 500:
+                # 400's
+                fg = "red"
+            else:
+                fg = "magenta"
+
+            output_stats.write(s(k, fg=fg))
+            output_stats.write(": ")
+            output_stats.write(s(v, bold=True))
+
+        output_stats.write(f"\n\nTotal requests made: ")
+        output_stats.write(s(sum(idox.seen_codes.values()), bold=True))
+
+        click.echo(output_stats.getvalue())
 
     asyncio.run(async_main())
 

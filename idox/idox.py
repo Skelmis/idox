@@ -1,9 +1,11 @@
 import asyncio
 import itertools
 import re
+from collections import defaultdict
 from enum import Enum
 from pathlib import Path
 
+import click
 import httpx
 import orjson
 from commons import exception_as_string
@@ -40,6 +42,8 @@ class Idox:
         self._iter_num = itertools.count()
         self.sequencer: SequenceT = sequencer
         self.protocol: str = protocol
+
+        self.seen_codes: dict[int, int] = defaultdict(lambda: 0)
 
         if request_url is None and request_file_path is None:
             raise ValueError(
@@ -234,8 +238,14 @@ class Idox:
         with open(base_all_path, "wb") as f:
             f.write(byte_content)
 
-        (ext_path / output_name).absolute().hardlink_to(base_all_path)
-        (code_path / output_name).absolute().hardlink_to(base_all_path)
+        r_1 = (ext_path / output_name).absolute()
+        r_1.unlink(missing_ok=True)
+        r_1.hardlink_to(base_all_path)
+        r_2 = (code_path / output_name).absolute()
+        r_2.unlink(missing_ok=True)
+        r_2.hardlink_to(base_all_path)
+
+        self.seen_codes[resp.status_code] += 1
 
     async def run(self):
         limits = httpx.Limits(
