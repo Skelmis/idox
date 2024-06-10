@@ -54,7 +54,7 @@ def file(
     ] = Path("./output"),
     injection_point: Annotated[
         str, typer.Option(help="The injection point to put numbers in")
-    ] = "$INJECT$",
+    ] = "{INJECT}",
     protocol: ProtocolChoices = "https",
 ):
     idox: Idox = Idox(
@@ -92,7 +92,7 @@ def url(
     ] = Path("./output"),
     injection_point: Annotated[
         str, typer.Option(help="The injection point to put numbers in")
-    ] = "$INJECT$",
+    ] = "{INJECT}",
     request_type: TypeChoices = "GET",
     protocol: ProtocolChoices = "https",
 ):
