@@ -9,7 +9,7 @@
 This tool will enumerate the provided URL and download all responses under the correct file extension for later analysis.
 
 Example statistics:
-<img src="https://github.com/Skelmis/idox/blob/master/images/usage.png" alt="drawing" width="750"/>
+<img src="https://github.com/Skelmis/idox/blob/master/images/usage.png" alt="drawing" width="500"/>
 
 *File extension incorrect or missing? Open an issue with an example response and expected behaviour*
 
@@ -40,17 +40,20 @@ To IDOR all images with the id's from `0` to `100` like so
 python -m idox file --request-file-path request.txt 100
 ```
 
-This would create an `output` directory which stores all the responses from your target site by response content type.
-
 #### Raw URLS
 
 Given it requires no auth, you can also enumerate all items with the following simpler syntax:
 
 ```shell
-python -m idox url "https://domain.com/images/{INJECT}/download"  100
+python -m idox url "https://domain.com/images/{INJECT}/download" 100
 ```
 
 This would create an `output` directory which stores all the responses from your target site by response content type.
+
+The following image contains an example output structure:
+
+<img src="https://github.com/Skelmis/idox/blob/master/images/output.png" alt="drawing" width="500"/>
+
 
 
 
