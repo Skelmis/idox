@@ -220,10 +220,6 @@ class Idox:
             print(exception_as_string(e))
             return
 
-        if resp.status_code >= 300:
-            print(f"Request returned non-200 code. {resp.text}")
-            return
-
         ext = self.extension_from_response(resp)
         ext_path = self.output_directory / ext
         all_path = self.output_directory / "all"
