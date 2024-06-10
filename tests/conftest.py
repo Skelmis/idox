@@ -5,7 +5,7 @@ import pytest
 
 @pytest.fixture
 def get_request() -> str:
-    path = Path("../data/get.txt")
+    path = Path("data/get.txt")
     with open(path, "r") as f:
         data = f.read()
 
@@ -14,7 +14,7 @@ def get_request() -> str:
 
 @pytest.fixture
 def malformed_request() -> str:
-    path = Path("../data/malformed.txt")
+    path = Path("data/malformed.txt")
     with open(path, "r") as f:
         data = f.read()
 
@@ -23,7 +23,7 @@ def malformed_request() -> str:
 
 @pytest.fixture
 def post_form_request() -> str:
-    path = Path("../data/post_form.txt")
+    path = Path("data/post_form.txt")
     with open(path, "r") as f:
         data = f.read()
 
@@ -32,7 +32,7 @@ def post_form_request() -> str:
 
 @pytest.fixture
 def post_json_request() -> str:
-    path = Path("../data/post_json.txt")
+    path = Path("data/post_json.txt")
     with open(path, "r") as f:
         data = f.read()
 
