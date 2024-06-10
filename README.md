@@ -52,6 +52,11 @@ python -m idox url "https://domain.com/images/{INJECT}/download" 100
 
 Imagine a site uses a predictable schema, but it's not `1`, `2`, `3`, etc. This package allows you to instead replace the numeric sequencer with a file of id's to use.
 
+We have created a file [example_ids.txt](example_ids.txt) which is our case is a list of UUID's we leaked from somewhere else out of scope. In order to use this within the program, all you'd need to do is the following command:
+```shell
+python -m idox url "https://blurp.skelmis.co.nz/{INJECT}" --sequence-file example_ids.txt
+```
+
 ### Example output
 
 This would create an `output` directory which stores all the responses from your target site by response content type.
