@@ -16,6 +16,12 @@ Example statistics:
 
 ### Example usage
 
+#### Install
+
+```shell
+pip install idox
+```
+
 #### Burp files
 
 Imagine you have a website that looks like the following:
