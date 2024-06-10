@@ -71,20 +71,9 @@ For further usage, see `python -m idox --help` or the `data` directory.
 
 ---
 
-### Support
+#### Other stuff
 
-Want realtime help? Join the discord [here](https://discord.gg/BqPNSH2jPg).
-
----
-
-### License
-This project is licensed under the MIT license
-
----
-
-### Funding
-
-Want a feature added quickly? Want me to help build your software using Idox?
-
-Sponsor me [here](https://github.com/sponsors/Skelmis)
+- Want realtime help? Join the discord [here](https://discord.gg/BqPNSH2jPg).
+- This project is licensed under the MIT license
+- Consider sponsoring me [here](https://github.com/sponsors/Skelmis)
 
