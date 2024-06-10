@@ -48,6 +48,12 @@ Given it requires no auth, you can also enumerate all items with the following s
 python -m idox url "https://domain.com/images/{INJECT}/download" 100
 ```
 
+#### Non-incrementing numeric ID enumeration
+
+Imagine a site uses a predictable schema, but it's not `1`, `2`, `3`, etc. This package allows you to instead replace the numeric sequencer with a file of id's to use.
+
+### Example output
+
 This would create an `output` directory which stores all the responses from your target site by response content type.
 
 The following image contains an example output structure:
