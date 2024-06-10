@@ -33,7 +33,7 @@ class Idox:
         request_file_path: Path | None = None,
         request_url: str | None = None,
         request_method: str = "GET",
-        injection_point: str = "$INJECT$",
+        injection_point: str = "{INJECT}",
         protocol: str = "https",
     ):
         self.output_directory: Path = output_directory
