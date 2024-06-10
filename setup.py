@@ -33,7 +33,7 @@ setup(
     long_description_content_type="text/markdown",
     project_urls={
         "Issue tracker": "https://github.com/Skelmis/idox/issues",
-        "Documentation": "https://idox.rtfd.io/",
+        # "Documentation": "https://idox.rtfd.io/",
         "Homepage": "https://github.com/Skelmis/idox",
     },
     packages=find_packages(include=("idox", "idox.*")),
