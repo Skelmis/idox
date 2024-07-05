@@ -4,6 +4,7 @@ import re
 from collections import defaultdict
 from enum import Enum
 from pathlib import Path
+from urllib import request
 
 import httpx
 import orjson
@@ -204,6 +205,7 @@ class Idox:
                             url=url,
                             cookies=self.request.cookies,
                             json=body,
+                            headers=self.request.headers,
                         )
                     else:
                         body = self.request.body
@@ -215,12 +217,14 @@ class Idox:
                             url=url,
                             cookies=self.request.cookies,
                             content=body,
+                            headers=self.request.headers,
                         )
                 else:
                     resp = await ac.request(
                         self.request.method,
                         url=url,
                         cookies=self.request.cookies,
+                        headers=self.request.headers,
                     )
         except Exception as e:
             print(exception_as_string(e))
