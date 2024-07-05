@@ -5,12 +5,13 @@ from collections import defaultdict
 from enum import Enum
 from pathlib import Path
 
-import click
 import httpx
 import orjson
 from commons import exception_as_string
 
-from idox import MalformedRequest, Request, SequenceT
+from idox.exceptions import MalformedRequest
+from idox.structs import Request
+from idox.sequences import SequenceT
 
 disp_pattern = re.compile(r".*filename=\"[a-zA-Z0-9`; -_=\[\]]*\.(.*)\"")
 
@@ -95,8 +96,13 @@ class Idox:
         try:
             # Handle input request
             code = request.replace("\r\n", "\n")
-            headers, body = code.split("\n\n")
-            headers: list[str] = headers.split("\n")  # type: ignore
+            try:
+                raw_headers, body = code.split("\n\n")
+            except ValueError:
+                # Likely missing an extra line just assume body is empty
+                raw_headers, body = code.removesuffix("\n"), ""
+
+            headers: list[str] = raw_headers.split("\n")  # type: ignore
             request_type, uri, _ = headers.pop(0).split(" ")
             request_type: str = request_type.upper()
             header_jar: dict[str, str] = {}
