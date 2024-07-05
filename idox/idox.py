@@ -41,7 +41,6 @@ class Idox:
         self.output_directory: Path = output_directory
         self.max_concurrent: int = max_concurrency
         self.semaphore = asyncio.Semaphore(max_concurrency)
-        self._iter_num = itertools.count()
         self.sequencer: SequenceT = sequencer
         self.protocol: str = protocol
 
@@ -238,8 +237,7 @@ class Idox:
         all_path.mkdir(parents=True, exist_ok=True)
         code_path.mkdir(parents=True, exist_ok=True)
         byte_content = resp.content
-        iter_num = next(self._iter_num)
-        output_name = f"{iter_num}.{ext}"
+        output_name = f"{current_iter}.{ext}"
         base_all_path = (all_path / output_name).absolute()
         with open(base_all_path, "wb") as f:
             f.write(byte_content)
