@@ -192,8 +192,18 @@ def main(idox: Idox):
             output_stats.write(s(v, bold=True))
             output_stats.write("\n")
 
-        output_stats.write(f"\n\nTotal requests made: ")
+        output_stats.write(f"\nTotal requests made: ")
         output_stats.write(s(sum(idox.seen_codes.values()), bold=True))
+
+        if idox.seen_errors:
+            output_stats.write("\n\nSeen errors:\n")
+            for k, v in sorted(idox.seen_errors.items()):
+                output_stats.write(f"{k}: ")
+                output_stats.write(s(v, bold=True))
+                output_stats.write("\n")
+
+            output_stats.write(f"\nTotal errors seen: ")
+            output_stats.write(s(sum(idox.seen_errors.values()), bold=True))
 
         click.echo(output_stats.getvalue())
 

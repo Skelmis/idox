@@ -1,18 +1,16 @@
 import asyncio
-import itertools
 import re
 from collections import defaultdict
 from enum import Enum
 from pathlib import Path
-from urllib import request
 
 import httpx
 import orjson
 from commons import exception_as_string
 
 from idox.exceptions import MalformedRequest
-from idox.structs import Request
 from idox.sequences import SequenceT
+from idox.structs import Request
 
 disp_pattern = re.compile(r".*filename=\"[a-zA-Z0-9`; -_=\[\]]*\.(.*)\"")
 
@@ -45,6 +43,7 @@ class Idox:
         self.protocol: str = protocol
 
         self.seen_codes: dict[int, int] = defaultdict(lambda: 0)
+        self.seen_errors: dict[str, int] = defaultdict(lambda: 0)
 
         if request_url is None and request_file_path is None:
             raise ValueError(
@@ -226,7 +225,7 @@ class Idox:
                         headers=self.request.headers,
                     )
         except Exception as e:
-            print(exception_as_string(e))
+            self.seen_errors[e.__class__.__name__] += 1
             return
 
         ext = self.extension_from_response(resp)
