@@ -190,6 +190,7 @@ def main(idox: Idox):
             output_stats.write(s(k, fg=fg))
             output_stats.write(": ")
             output_stats.write(s(v, bold=True))
+            output_stats.write("\n")
 
         output_stats.write(f"\n\nTotal requests made: ")
         output_stats.write(s(sum(idox.seen_codes.values()), bold=True))
