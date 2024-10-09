@@ -79,7 +79,8 @@ class Idox:
         else:
             raise ValueError(f"Failed to find {self._injection_string} in the request")
 
-    def split_request(self, request: str) -> Request:
+    @classmethod
+    def split_request(cls, request: str) -> Request:
         """Given a valid HTTP request, return the headers
 
         Returns
