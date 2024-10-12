@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "idox"
+version = "1.3.0"
+description = "IDOR file downloader using HTTP request files."
+authors = ["skelmis <skelmis.craft@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[project]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Issue tracker" = "https://github.com/Skelmis/idox/issues"
+Homepage = "https://github.com/Skelmis/idox"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+orjson = "^3.10.7"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.3"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
