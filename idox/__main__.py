@@ -1,13 +1,12 @@
 import asyncio
 import io
-import sys
 from enum import Enum
 from pathlib import Path
 from typing import Annotated
 
 import click
-from click import style as s
 import typer
+from click import style as s
 
 from idox import Idox, NumericSequence, FileSequence, SequenceT
 
