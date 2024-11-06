@@ -11,6 +11,12 @@ async def main():
         # request_file_path=Path("data/showcase_json_body.txt"),
         # request_file_path=Path("data/showcase_raw_body.txt"),
     )
+    idox: Idox = Idox(
+        NumericSequence(ending_number=75),
+        request_url="https://animalethics-forms.agresearch.co.nz/Personalisation/DownloadTemplate/{INJECT}"
+        # request_file_path=Path("data/showcase_json_body.txt"),
+        # request_file_path=Path("data/showcase_raw_body.txt"),
+    )
     await idox.run()
 
 

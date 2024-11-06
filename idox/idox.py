@@ -8,6 +8,7 @@ import httpx
 import orjson
 from commons import exception_as_string
 
+from docs.conf import extensions
 from idox.exceptions import MalformedRequest
 from idox.sequences import SequenceT
 from idox.structs import Request
@@ -163,6 +164,14 @@ class Idox:
 
         elif "application/json" in content_type:
             extension = "json"
+
+        elif "application/octet-stream" in content_type:
+            # Some form of binary stream aye
+            # Needs manual analysis to figure out
+            if content.startswith("%PDF-"):
+                extension = "pdf"
+            else:
+                extension = "txt"
 
         else:
             # Let's look at the content disposition now
