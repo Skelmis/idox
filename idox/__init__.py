@@ -1,4 +1,4 @@
-__version__ = "1.3.2"
+__version__ = "1.3.3"
 
 import logging
 from collections import namedtuple
@@ -9,7 +9,7 @@ from idox.sequences import SequenceT, NumericSequence, FileSequence
 from idox.idox import Idox
 
 VersionInfo = namedtuple("VersionInfo", "major minor micro releaselevel serial")
-version_info = VersionInfo(major=1, minor=3, micro=2, releaselevel="stable", serial=0)
+version_info = VersionInfo(major=1, minor=3, micro=3, releaselevel="stable", serial=0)
 logging.getLogger(__name__).addHandler(logging.NullHandler())
 
 __all__ = (

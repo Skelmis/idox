@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "idox"
-version = "1.3.2"
+version = "1.3.3"
 description = "IDOR file downloader using HTTP request files."
 authors = ["skelmis <skelmis.craft@gmail.com>"]
 license = "MIT"
