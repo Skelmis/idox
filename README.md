@@ -64,6 +64,8 @@ We have created a file [example_ids.txt](example_ids.txt) which is our case is a
 python -m idox url "https://blurp.skelmis.co.nz/{INJECT}" --sequence-file example_ids.txt
 ```
 
+N.b. You can also implement the `idox.SequenceT` interface and provide that to `Idox`, at which point it'll work fine and you have custom input.
+
 ### Example output
 
 All of these would create an `output` directory which stores all the responses from your target site by response content type.
