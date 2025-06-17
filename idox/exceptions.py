@@ -10,3 +10,7 @@ class BaseIdoxException(Exception):
 
 class MalformedRequest(BaseIdoxException):
     """The provided request did not match the excepted HTTP format."""
+
+
+class MalformedResponse(BaseIdoxException):
+    """The provided response did not match the excepted HTTP format."""

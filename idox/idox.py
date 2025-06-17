@@ -8,8 +8,8 @@ import httpx
 import orjson
 from commons import exception_as_string
 
-from idox import CaseInsensitiveDict
-from idox.exceptions import MalformedRequest
+from idox import CaseInsensitiveDict, Response
+from idox.exceptions import MalformedRequest, MalformedResponse
 from idox.sequences import SequenceT
 from idox.structs import Request
 
@@ -81,8 +81,53 @@ class Idox:
             raise ValueError(f"Failed to find {self._injection_string} in the request")
 
     @classmethod
+    def split_response(cls, response: str) -> Response:
+        """Given a valid HTTP response, return it as a data structure.
+
+        Returns
+        -------
+        Response
+            The response as split
+
+        Raises
+        ------
+        MalformedResponse
+            The request did not match the expected HTTP spec
+        """
+        try:
+            # Handle input request
+            code = response.replace("\r\n", "\n")
+            try:
+                raw_headers, body = code.split("\n\n")
+            except ValueError:
+                # Likely missing an extra line just assume body is empty
+                raw_headers, body = code.removesuffix("\n"), ""
+
+            headers: list[str] = raw_headers.split("\n")  # type: ignore
+            proto, status_code, status_text = headers.pop(0).split(" ")
+            status_code = int(status_code)
+            header_jar: dict[str, str] = {}
+            for line in headers:
+                k, v = line.split(": ", maxsplit=1)
+                header_jar[k] = v
+
+            is_json = "json" in header_jar.get("Content-Type", "")
+            if is_json:
+                body = orjson.loads(body)
+
+            return Response(
+                headers=CaseInsensitiveDict(header_jar),
+                body=body,
+                proto=proto,
+                status_code=status_code,
+                status_text=status_text,
+            )
+        except Exception as e:
+            raise MalformedResponse from e
+
+    @classmethod
     def split_request(cls, request: str) -> Request:
-        """Given a valid HTTP request, return the headers
+        """Given a valid HTTP request, return it as a data structure.
 
         Returns
         -------

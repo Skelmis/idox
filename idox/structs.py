@@ -9,3 +9,11 @@ class Request(NamedTuple):
     body: str | dict
     headers: CaseInsensitiveDict
     cookies: list[tuple[str, str]]
+
+
+class Response(NamedTuple):
+    proto: str
+    status_code: int
+    status_text: str
+    headers: CaseInsensitiveDict
+    body: str | dict
