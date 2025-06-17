@@ -8,6 +8,7 @@ import httpx
 import orjson
 from commons import exception_as_string
 
+from idox import CaseInsensitiveDict
 from idox.exceptions import MalformedRequest
 from idox.sequences import SequenceT
 from idox.structs import Request
@@ -127,7 +128,7 @@ class Idox:
             return Request(
                 url=url,
                 cookies=cookies,
-                headers=header_jar,
+                headers=CaseInsensitiveDict(header_jar),
                 body=body,
                 method=request_type,
             )

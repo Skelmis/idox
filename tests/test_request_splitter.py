@@ -18,6 +18,11 @@ def test_get_request(get_request):
         "Host": "blurp.skelmis.co.nz",
         "Cookie": "one=1; two=2;",
     }
+    assert request.headers == {
+        "X-tEsT": "Hello World",
+        "host": "blurp.skelmis.co.nz",
+        "COOKIE": "one=1; two=2;",
+    }
     assert request.cookies == [("one", "1"), ("two", "2")]
 
 
