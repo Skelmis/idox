@@ -52,6 +52,13 @@ def file(
     max_concurrency: Annotated[
         int, typer.Option(help="Maximum concurrent requests to make at a time")
     ] = 25,
+    request_timeout: Annotated[
+        float | None,
+        typer.Option(
+            help="Maximum time to wait on a request before throwing a timeout error. "
+            "Set to None for never"
+        ),
+    ] = 120,
     output_directory: Annotated[
         Path, typer.Option(help="Directory to store results in")
     ] = Path("./output"),
@@ -76,6 +83,7 @@ def file(
         output_directory=output_directory,
         max_concurrency=max_concurrency,
         injection_point=injection_point,
+        request_timeout=request_timeout,
     )
     main(idox)
 
@@ -95,6 +103,13 @@ def url(
     max_concurrency: Annotated[
         int, typer.Option(help="Maximum concurrent requests to make at a time")
     ] = 25,
+    request_timeout: Annotated[
+        float | None,
+        typer.Option(
+            help="Maximum time to wait on a request before throwing a timeout error. "
+            "Set to None for never"
+        ),
+    ] = 120,
     output_directory: Annotated[
         Path, typer.Option(help="Directory to store results in")
     ] = Path("./output"),
@@ -122,6 +137,7 @@ def url(
         max_concurrency=max_concurrency,
         injection_point=injection_point,
         request_method=request_type.value,
+        request_timeout=request_timeout,
     )
     main(idox)
 

@@ -30,6 +30,7 @@ class Idox:
         sequencer: SequenceT,
         *,
         max_concurrency: int = 25,
+        request_timeout: float | None = 120,
         output_directory: Path = Path("./output"),
         request_file_path: Path | None = None,
         request_url: str | None = None,
@@ -37,6 +38,7 @@ class Idox:
         injection_point: str = "{INJECT}",
         protocol: str = "https",
     ):
+        self.request_timeout: float | None = request_timeout
         self.output_directory: Path = output_directory
         self.max_concurrent: int = max_concurrency
         self.semaphore = asyncio.Semaphore(max_concurrency)
@@ -303,6 +305,8 @@ class Idox:
             max_connections=None,
             keepalive_expiry=None,
         )
-        async with httpx.AsyncClient(limits=limits) as client:
+        async with httpx.AsyncClient(
+            limits=limits, timeout=self.request_timeout
+        ) as client:
             coros = [self._make_request(client, i) for i in self.sequencer]
             await asyncio.gather(*coros)
