@@ -100,7 +100,7 @@ class Idox:
             # Handle input request
             code = response.replace("\r\n", "\n")
             try:
-                raw_headers, body = code.split("\n\n")
+                raw_headers, body = code.split("\n\n", maxsplit=1)
             except ValueError:
                 # Likely missing an extra line just assume body is empty
                 raw_headers, body = code.removesuffix("\n"), ""

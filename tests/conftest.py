@@ -22,6 +22,15 @@ def html_resp() -> str:
 
 
 @pytest.fixture
+def html_extra_newline_resp() -> str:
+    path = Path("data/html_newline_resp.txt")
+    with open(path, "r") as f:
+        data = f.read()
+
+    return data
+
+
+@pytest.fixture
 def malformed_request() -> str:
     path = Path("data/malformed.txt")
     with open(path, "r") as f:
