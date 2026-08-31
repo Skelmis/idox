@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import re
 from collections import defaultdict
 from enum import Enum
@@ -12,6 +13,8 @@ from idox import CaseInsensitiveDict, Response
 from idox.exceptions import MalformedRequest, MalformedResponse
 from idox.sequences import SequenceT
 from idox.structs import Request
+
+logger = logging.getLogger(__name__)
 
 disp_pattern = re.compile(r".*filename=\"[a-zA-Z0-9`; -_=\[\]]*\.(.*)\"")
 
@@ -115,7 +118,11 @@ class Idox:
 
             is_json = "json" in header_jar.get("Content-Type", "")
             if is_json:
-                body = orjson.loads(body)
+                try:
+                    body = orjson.loads(body)
+                except:
+                    logger.debug("Tried to convert body to JSON and failed")
+                    pass
 
             return Response(
                 headers=CaseInsensitiveDict(header_jar),
