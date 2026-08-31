@@ -106,7 +106,7 @@ class Idox:
                 raw_headers, body = code.removesuffix("\n"), ""
 
             headers: list[str] = raw_headers.split("\n")  # type: ignore
-            proto, status_code, status_text = headers.pop(0).split(" ")
+            proto, status_code, status_text = headers.pop(0).split(" ", maxsplit=2)
             status_code = int(status_code)
             header_jar: dict[str, str] = {}
             for line in headers:

@@ -38,6 +38,14 @@ def malformed_request() -> str:
 
     return data
 
+@pytest.fixture
+def not_found() -> str:
+    path = Path("data/404.txt")
+    with open(path, "r") as f:
+        data = f.read()
+
+    return data
+
 
 @pytest.fixture
 def post_form_request() -> str:
